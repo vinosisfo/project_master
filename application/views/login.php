@@ -17,14 +17,14 @@
 <body class="hold-transition login-page">
 <div class="login-box">
   <div class="login-logo">
-    <b>Admin</b>LTE
+    
   </div>
   <!-- /.login-logo -->
   <div class="card">
     <div class="card-body login-card-body">
-      <p class="login-box-msg">Sign in to start your session</p>
+      <p class="login-box-msg">Sign in</p>
       <?php if(strlen($pesan) > 3) { ?>
-        <p class="login-box-msg" style="color : red;"><?php echo $pesan ?>Username / Password Salah</p>
+        <p class="login-box-msg" style="color : red; font-weight: bold;"><?php echo $pesan ?> Username / Password Salah</p>
       <?php } ?>
 
       <form id="form_login" autocomplete="off">
@@ -32,7 +32,7 @@
           <input type="text" name="username" id="username" class="form-control" placeholder="Username" maxlength="50">
           <div class="input-group-append">
             <div class="input-group-text">
-              <span class="fas fa-envelope"></span>
+              <span class="fas fa-user"></span>
             </div>
           </div>
         </div>
@@ -84,7 +84,7 @@
         return false
       }
 
-      url = '<?php echo base_url('welcome/akses_login')?>'
+      url = '<?php echo base_url('indexlog/akses_login')?>'
       $('#form_login').attr('action',url);
       $('#form_login').attr('method','post');
       $('#form_login').submit();

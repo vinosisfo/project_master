@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AdminLTE 3 | DataTables</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AdminLTE 3 | DataTables</title>
 
-  <!-- Google Font: Source Sans Pro -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/fontawesome-free/css/all.min.css')?>">
-  <!-- overlayScrollbars -->
-  <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')?>">
-  <!-- DataTables -->
-  <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')?>">
-  <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')?>">
-  <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')?>">
-  <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-select/css/select.bootstrap4.css')?>" rel="stylesheet">
-  <!-- Theme style -->
-  <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/dist/css/adminlte.min.css')?>">
+    <!-- Google Font: Source Sans Pro -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/fontawesome-free/css/all.min.css')?>">
+    <!-- overlayScrollbars -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/overlayScrollbars/css/OverlayScrollbars.min.css')?>">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-responsive/css/responsive.bootstrap4.min.css')?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-buttons/css/buttons.bootstrap4.min.css')?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-select/css/select.bootstrap4.css')?>" rel="stylesheet">
+    <!-- Theme style -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/dist/css/adminlte.min.css')?>">
 </head>
 
 <style>
@@ -29,8 +29,8 @@
     }
 
     .table-condensed>thead>tr>th, .table-condensed>tbody>tr>th, .table-condensed>tfoot>tr>th, .table-condensed>thead>tr>td, .table-condensed>tbody>tr>td, .table-condensed>tfoot>tr>td{
-        padding-top   : 2px;
-        padding-bottom: 2px;
+        padding-top   : 5px;
+        padding-bottom: 0px;
         font-size     : 14px;
     }
 

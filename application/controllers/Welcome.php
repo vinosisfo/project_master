@@ -27,21 +27,17 @@ class Welcome extends CI_Controller {
 
 		$this->load->view('template/bar/body');
 		$this->load->view('template/bar/footer');
+
+        //test edit
+        //test edit
 		
 
 	}
 
     public function index_2()
     {
-        $this->load->view('template/css/css');
-        $this->load->view('template/bar/nav_bar');
-        $this->load->view('template/bar/menu');
-        $this->load->view('template/js/js');
-
-        $this->load->view('template/bar/table_bar');
-        $this->load->view('template/bar/footer');
-        
-
+        $data["main_content"] = 'template/bar/table_bar';
+        $this->load->view("template/bar/main_content",$data);
     }
 
     public function login($pesan="")
@@ -71,16 +67,17 @@ class Welcome extends CI_Controller {
                         ->get();
 
         if($sql->num_rows() > 0){
-            $data = $sql->row();
+            $data           = $sql->row();
+            $ip_address     = $this->get_client_ip();
+            $nama_perangkat = gethostbyaddr($_SERVER['REMOTE_ADDR']);
+            $now            = date("Y-m-d H:i:s");
 
             $sess_data['iduser']   = $data->IdUser;
             $sess_data['password'] = $data->Password;
             $sess_data['username'] = $data->Username;
             $this->session->set_userdata($sess_data);
 
-            $ip_address     = $this->get_client_ip();
-            $nama_perangkat = gethostbyaddr($_SERVER['REMOTE_ADDR']);
-            $now            = date("Y-m-d H:i:s");
+            
             redirect(base_url('welcome'));
         } else {
             $this->login('salah');
@@ -127,8 +124,8 @@ class Welcome extends CI_Controller {
             $row [] = '<p style="text-align : left; margin-right:10px;">'.$field->Password.'</p>';
             $row [] = '<p style="text-align : left; margin-right:10px;">'.$field->Username.'</p>';
             $row [] = '<p style="text-align : left; margin-right:10px;">'.$field->Aktif.'</p>';
-            for ($i=1; $i <=15 ; $i++) { 
-            	$row [] = '<p style="text-align : left; margin-right:10px;">'.$field->Aktif.'</p>';
+            for ($i=1; $i <=15 ; $i++) {
+                $row [] = '<p style="text-align : left; margin-right:10px;">'.$field->Aktif.'</p>';
             }
             
             $data[] = $row;
@@ -170,19 +167,18 @@ class Welcome extends CI_Controller {
 
     public function count_all()
     {
-        $sql = "(SELECT * FROM tbuser A WHERE 1=1 ) A1";
-        $this->db->from($sql);
-        return $this->db->count_all_results();
+        $sql = 0;
+        return $sql;
     }  
 
     function insert_batch(){
-    	for ($i=1; $i <=20 ; $i++) { 
-    		$sql = [
-    				"username" => 'user_name_'.$i,
-    				"password" => 'pasword'.$i,
-    				"aktif" => 'ya',
-    				];
-    		$this->db->insert("tbuser",$sql);
-    	}
+        for ($i=1; $i <=20 ; $i++) { 
+            $sql = [
+                    "username" => 'user_name_'.$i,
+                    "password" => 'pasword'.$i,
+                    "aktif" => 'ya',
+                    ];
+            $this->db->insert("tbuser",$sql);
+        }
     }
 }
