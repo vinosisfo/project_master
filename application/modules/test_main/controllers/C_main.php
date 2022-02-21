@@ -19,6 +19,7 @@ class C_main extends MX_Controller  {
 	{	
 		$data["main_content"] = 'v_main';
         $this->load->view("template/bar/main_content",$data);
+        // test edit disini
 	}
 
 	function get_data()
