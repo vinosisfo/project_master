@@ -38,12 +38,14 @@ $this->load->view('template/js/js'); ?>
                 </button>
             </div>
             <div class="modal-body">
-                <p>One fine body&hellip;</p>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <div id="data_detail"></div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    function close_modal(){
+        $("#modal-default").modal("hide")
+    }
+</script>
