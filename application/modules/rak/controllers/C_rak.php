@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class C_satuan extends MX_Controller  {
+class C_rak extends MX_Controller  {
 	
 	public function __construct()
 	{

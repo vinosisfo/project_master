@@ -20,6 +20,9 @@
 <script src="<?php echo base_url('assets/AdminLTE-3.1.0/dist/js/adminlte.min.js')?>"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?php echo base_url('assets/AdminLTE-3.1.0/dist/js/demo.j')?>s"></script>
+<script src="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/sweetalert2/sweetalert2.min.js')?>"></script>
+<script src="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/toastr/toastr.min.js') ?>"></script>
+<script src="<?php echo base_url('assets/izitoast/dist/js/iziToast.min.js')?>"></script>
 <!-- Page specific script -->
 <script>
   $.widget.bridge('uibutton', $.ui.button)
@@ -40,4 +43,39 @@
       "responsive"  : true,
     });
   });
+
+
+  function error_msg(pesan){
+		iziToast.error({
+			title   : 'Error !!',
+			message : pesan,
+			position: 'topCenter'
+		});
+	}
+
+  function hapus_msg(pesan){
+		iziToast.error({
+			title   : 'Berhasil !!',
+			message : pesan,
+			position: 'topCenter'
+		});
+	}
+
+	function succes_msg(pesan)
+	{
+		iziToast.success({
+			title   : 'Berhasil!',
+			message : pesan,
+			position: 'topCenter'
+		});
+	}
+
+	function info_msg(pesan)
+	{
+		iziToast.info({
+			title   : 'info!',
+			message : pesan,
+			position: 'topCenter'
+		});
+	}
 </script>

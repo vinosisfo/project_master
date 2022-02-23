@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/datatables-select/css/select.bootstrap4.css')?>" rel="stylesheet">
     <!-- Theme style -->
     <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/dist/css/adminlte.min.css')?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/toastr/toastr.min.css')?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/izitoast/dist/css/iziToast.min.css')?>">
 </head>
 
 <style>
