@@ -1,17 +1,17 @@
-<table class="table table-condensed" style="width: 100px;">
+<table class="customers" style="table-layout : auto;white-space : nowrap;">
   <tr>
-    <td style="width: 50px;">Satuan</td>
-    <td style="width: 50px;">
+    <td>Data Jenis Barang</td>
+    <td>
       <button class="btn btn-primary btn-xs" type="button" onclick="input_data(this)">Input</button>
     </td>
   </tr>
 </table>
-<table class="table table-condensed" style="width: 200px;">
+<table class="customers" style="white-space:nowrap;table-layout : auto;">
   <tr>
-    <td>Nama</td>
+    <td>Jenis</td>
     <td>:</td>
     <td>
-      <input type="text" name="nama_src" id="nama_src">
+      <input type="text" name="jenis_src" id="jenis_src">
     </td>
 
     <td>Aktif</td>
@@ -28,12 +28,12 @@
     </td>
   </tr>
 </table>
-<table id="tb_data_list" class="table table-bordered table-striped table-condensed">
+<table id="tb_data_list" class="customers_border" style="min-width: 90%;">
   <thead>
       <tr>
-        <th></th>
-        <th></th>
-        <th>Nama Satuan</th>
+        <th style="width: 10px;"></th>
+        <th style="width: 10px;"></th>
+        <th>Jenis Barang</th>
         <th>Aktif</th>
       </tr>
   </thead>
@@ -43,14 +43,14 @@
 <script type="text/javascript">
 
     function input_data(){
-      $.post("<?php echo base_url('satuan/c_satuan/input_data')?>",{inpt : "input"},function(data){
+      $.post("<?php echo base_url('jenisbarang/c_jenisbarang/input_data')?>",{inpt : "input"},function(data){
         $("#modal-default").modal("show")
         $("#data_detail").html(data)
       })
     }
 
-    function edit_data(id_satuan){
-      $.post("<?php echo base_url('satuan/c_satuan/edit_data')?>",{id_satuan : id_satuan},function(data){
+    function edit_data(id_jenis){
+      $.post("<?php echo base_url('jenisbarang/c_jenisbarang/edit_data')?>",{id_jenis : id_jenis},function(data){
         $("#modal-default").modal("show")
         $("#data_detail").html(data)
       })
@@ -74,10 +74,10 @@
       },
       "order"       : [],
       "ajax"        : {
-          "url" : "<?php echo base_url('satuan/c_satuan/get_data')?>",
+          "url" : "<?php echo base_url('jenisbarang/c_jenisbarang/get_data')?>",
           "type": "POST",
           "data": function ( data ) {
-              data.nama_src         = $('#nama_src').val()
+              data.jenis_src        = $('#jenis_src').val()
               data.status_aktif_src = $('#status_aktif_src').val()
           }
       },

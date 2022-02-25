@@ -43,6 +43,13 @@
                 <p>Rak</p>
               </a>
             </li>
+
+            <li class="nav-item">
+              <a href="<?php echo base_url('jenisbarang/c_jenisbarang')?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Jenis Barang</p>
+              </a>
+            </li>
           </ul>
         </li>
 
