@@ -50,6 +50,13 @@
                 <p>Jenis Barang</p>
               </a>
             </li>
+
+            <li class="nav-item">
+              <a href="<?php echo base_url('barang/c_barang')?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Barang</p>
+              </a>
+            </li>
           </ul>
         </li>
 
