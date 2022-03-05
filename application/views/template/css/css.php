@@ -20,6 +20,9 @@
     <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/dist/css/adminlte.min.css')?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/toastr/toastr.min.css')?>">
     <link rel="stylesheet" href="<?php echo base_url('assets/izitoast/dist/css/iziToast.min.css')?>">
+    <!-- select2 -->
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/select2/css/select2.min.css')?>">
+    <link rel="stylesheet" href="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css')?>">
 </head>
 
 <style>
