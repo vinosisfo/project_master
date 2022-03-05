@@ -23,29 +23,40 @@
 <script src="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/sweetalert2/sweetalert2.min.js')?>"></script>
 <script src="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/toastr/toastr.min.js') ?>"></script>
 <script src="<?php echo base_url('assets/izitoast/dist/js/iziToast.min.js')?>"></script>
+<!-- Select2 -->
+<script src="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/select2/js/select2.full.min.js')?>"></script>
+
 <!-- Page specific script -->
 <script>
-  $.widget.bridge('uibutton', $.ui.button)
-  
-  $(function () {
-    $("#example1").DataTable({
-      "responsive": true, "lengthChange": false, "autoWidth": false,
-      "buttons"   : ["copy", "csv", "excel", "pdf", "print", "colvis"]
-    }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-    
-    $('#example2').DataTable({
-      "paging"      : true,
-      "lengthChange": false,
-      "searching"   : false,
-      "ordering"    : true,
-      "info"        : true,
-      "autoWidth"   : false,
-      "responsive"  : true,
-    });
-  });
+	$.widget.bridge('uibutton', $.ui.button)
+
+	$(function () {
+		$("#example1").DataTable({
+			"responsive": true, "lengthChange": false, "autoWidth": false,
+			"buttons"   : ["copy", "csv", "excel", "pdf", "print", "colvis"]
+		}).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+		
+		$('#example2').DataTable({
+			"paging"      : true,
+			"lengthChange": false,
+			"searching"   : false,
+			"ordering"    : true,
+			"info"        : true,
+			"autoWidth"   : false,
+			"responsive"  : true,
+		});
+
+		//Initialize Select2 Elements
+		$('.select2').select2()
+
+		//Initialize Select2 Elements
+		$('.select2bs4').select2({
+			theme: 'bootstrap4'
+		})
+	});
 
 
-  function error_msg(pesan){
+	function error_msg(pesan){
 		iziToast.error({
 			title   : 'Error !!',
 			message : pesan,
@@ -53,7 +64,7 @@
 		});
 	}
 
-  function hapus_msg(pesan){
+	function hapus_msg(pesan){
 		iziToast.error({
 			title   : 'Berhasil !!',
 			message : pesan,
@@ -78,4 +89,32 @@
 			position: 'topCenter'
 		});
 	}
+
+	function hanya_angka(data,urut='')
+	{
+		var isi   = data.value;
+		var isi2  = $(this);
+		let hasil = format_number(isi);
+		$(data).val(hasil);
+		console.log(isi);
+    }
+
+	function format_number(number, prefix, thousand_separator, decimal_separator)
+    {
+        var thousand_separator = thousand_separator || ',',
+            decimal_separator  = decimal_separator || '.',
+            regex              = new RegExp('[^' + decimal_separator + '\\d]', 'g'),
+            number_string      = number.replace(regex, '').toString(),
+            split              = number_string.split(decimal_separator),
+            rest               = split[0].length % 3,
+            result             = split[0].substr(0, rest),
+            thousands          = split[0].substr(rest).match(/\d{3}/g);
+        
+        if (thousands) {
+            separator  = rest ? thousand_separator : '';
+            result    += separator + thousands.join(thousand_separator);
+        }
+        result = split[1] != undefined ? result + decimal_separator + split[1] : result;
+        return prefix == undefined ? result : (result ?  result  + prefix: '');
+    };
 </script>

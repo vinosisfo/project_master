@@ -31,14 +31,16 @@ class C_barang extends MX_Controller  {
             $row = array();
 
             $row [] = $no;
-            $row [] = '<button type="button" onclick="edit_data('.$field->KodeBarang.')" class="btn btn-info btn-xs">Edit</button>';
+            $row [] = '<button type="button" onclick="edit_data(\''.$field->KodeBarang.'\')" class="btn btn-info btn-xs">Edit</button>';
             $row [] = '<p style="text-align : left; margin-right:7px;">'.$field->NamaBarang.'</p>';
             $row [] = '<p style="text-align : left; margin-right:7px;">'.$field->NamaSatuan.'</p>';
             $row [] = '<p style="text-align : left; margin-right:7px;">'.$field->SATUAN_KECIL.'</p>';
-            $row [] = '<p style="text-align : left; margin-right:7px;">'.$field->Harga.'</p>';
             $row [] = '<p style="text-align : left; margin-right:7px;">'.$field->JenisBarang.'</p>';
             $row [] = '<p style="text-align : left; margin-right:7px;">'.$field->NamaJenisPesan.'</p>';
             $row [] = '<p style="text-align : left; margin-right:7px;">'.$field->NamaRak.' - '.$field->Alias.'</p>';
+            $row [] = '<p style="text-align : left; margin-right:7px;">'.number_format($field->Harga).'</p>';
+            $row [] = '<p style="text-align : left; margin-right:7px;">'.number_format($field->StokMinimal).'</p>';
+            $row [] = '<p style="text-align : left; margin-right:7px;">'.$field->NamaManufacture.'</p>';
             $row [] = '<p style="text-align : left; margin-right:7px;">'.($field->Aktif==1) ? "Ya" : "Tdk".'</p>';
             
             $data[] = $row;
@@ -65,21 +67,33 @@ class C_barang extends MX_Controller  {
     function query_data()
     {
         $nama_src         = $this->input->post("nama_src");
-        $alias_src        = $this->input->post("alias_src");
+        $jenis_src        = $this->input->post("jenis_src");
+        $manuf_src        = $this->input->post("manuf_src");
+        $asal_src        = $this->input->post("asal_src");
         $status_aktif_src = $this->input->post("status_aktif_src");
 
-        $where_nama   = (empty($nama_src)) ? "" : " AND A.NamaRak LIKE '%$nama_src%'";
-        $where_alias  = (empty($alias_src)) ? "" : " AND B.Alias LIKE '%$alias_src%'";
+        $where_nama   = (empty($nama_src)) ? "" : " AND A.NamaBarang LIKE '%$nama_src%'";
+        $where_jenis  = (empty($jenis_src)) ? "" : " AND D.JenisBarang LIKE '%$jenis_src%'";
+        $where_manuf  = (empty($manuf_src)) ? "" : " AND G.NamaManufacture LIKE '%$manuf_src%'";
+        $where_asal  = (empty($asal_src)) ? "" : " AND E.NamaJenisPesan LIKE '%$asal_src%'";
         $where_status = (strlen($status_aktif_src)==0) ? "" : " AND A.Aktif='$status_aktif_src'";
 
         $sql = "(SELECT A.KodeBarang,A.IdSatuanBesar,B.NamaSatuan,A.IdSatuanKecil,C.NamaSatuan AS SATUAN_KECIL  
                 ,A.IdJenis,D.JenisBarang,A.IdAsal,E.NamaJenisPesan,A.IdRakDetail,F.NamaRak,F.Alias,A.Harga,A.NamaBarang,A.Aktif
+                ,G.idmanufacture,G.NamaManufacture,A.StokMinimal
                 FROM barang A
                 INNER JOIN satuan B ON B.IdSatuan=A.IdSatuanBesar
                 INNER JOIN satuan C ON C.IdSatuan=A.IdSatuanKecil
                 INNER JOIN jenisbarang D ON D.idJenisBarang=A.IdJenis
                 INNER JOIN jenispesan E ON E.idJenisPesan=A.IdAsal
                 INNER JOIN (SELECT DISTINCT X.idRak,X.NamaRak,Y.idRakDetail,Y.Alias FROM rak X INNER JOIN rakdetail Y ON X.idRak=Y.idRak) F ON F.idRakDetail=A.IdRakDetail 
+                INNER JOIN manufacture G ON G.idmanufacture=A.IdManufacture
+                WHERE 1=1
+                $where_nama
+                $where_jenis
+                $where_manuf
+                $where_asal
+                $where_status
                 ) A1";
         $this->db->from($sql);
     }
@@ -98,56 +112,135 @@ class C_barang extends MX_Controller  {
     }
     
     function input_data(){
-        $input = $this->input->post("input");
+        $input  = $this->input->post("input");
+        $satuan = $this->db->query("SELECT DISTINCT A.IdSatuan,A.NamaSatuan FROM satuan A WHERE A.Aktif=1 ORDER BY A.NamaSatuan ASC");
+        $jenis  = $this->db->query("SELECT DISTINCT A.idJenisBarang,A.JenisBarang FROM jenisbarang A WHERE A.Aktif=1 ORDER BY A.JenisBarang");
+        $asal   = $this->db->query("SELECT DISTINCT A.idJenisPesan,A.NamaJenisPesan FROM jenispesan A WHERE A.Aktif=1 ORDER BY A.NamaJenisPesan");
+        $manuf  = $this->db->query("SELECT DISTINCT A.idmanufacture,A.NamaManufacture FROM manufacture A WHERE A.Aktif=1 ORDER BY A.NamaManufacture");
+        $rak    = $this->db->query("SELECT DISTINCT A.idRakDetail,B.idRak,B.NamaRak,A.Alias 
+                                    FROM rakdetail A INNER JOIN rak B ON B.idRak=A.IdRak
+                                    WHERE A.Aktif=1 AND B.Aktif=1
+                                    ORDER BY B.NamaRak,A.Alias");
 
-        $this->load->view("v_input_data");
+        $data["satuan"] = $satuan;
+        $data["jenis"]  = $jenis;
+        $data["asal"]   = $asal;
+        $data["manuf"]  = $manuf;
+        $data["rak"]    = $rak;
+        $this->load->view("v_input_data",$data);
+    }
+
+    function cek_data_barang(){
+        $nama_barang  = $this->input->post("nama_barang");
+        $satuan_besar = $this->input->post("satuan_besar");
+        $satuan_kecil = $this->input->post("satuan_kecil");
+        $jenis_barang = $this->input->post("jenis_barang");
+        $asal_barang  = $this->input->post("asal_barang");
+        $rak_barang   = $this->input->post("rak_barang");
+        $manufacture  = $this->input->post("manufacture");
+        $stok_min     = $this->input->post("stok_min");
+        $harga        = $this->input->post("harga");
+        $aktif        = $this->input->post("aktif");
+        $jenis_update = $this->input->post("jenis_update");
+        
+        $nama_barang_cek = preg_replace('/\s+/', '', $nama_barang);
+        $stok_min_set    = str_replace(",","",$stok_min[0]);
+        $harga_set       = str_replace(",","",$harga[0]);
+        $where_aktif     = ($jenis_update=="update") ? " 1=1 AND A.Aktif='$aktif[0]' AND A.IdSatuanBesar='$satuan_besar[0]' 
+                                                        AND A.IdSatuanKecil='$satuan_kecil[0]' AND A.IdAsal='$asal_barang[0]' AND A.IdRakDetail='$rak_barang[0]'
+                                                        AND A.StokMinimal='$stok_min_set' AND A.Harga='$harga_set'" : "1=1";
+        $cek_data        = $this->db->select("A.KodeBarang")
+                                    ->from("Barang A")
+                                    ->where($where_aktif)
+                                    ->where_in("replace(A.NamaBarang,' ', '')",$nama_barang_cek)
+                                    ->where_in("A.IdJenis",$jenis_barang)
+                                    ->where_in("A.IdManufacture",$manufacture)
+                                    ->get();
+        
+        $hasil["hasil"] = ($cek_data->num_rows() > 0) ? "ada" : "ok";
+        echo json_encode($hasil);
+    }
+
+    function cek_data_duplikat(){
+        $nama_barang  = $this->input->post("nama_barang");
+        $satuan_besar = $this->input->post("satuan_besar");
+        $satuan_kecil = $this->input->post("satuan_kecil");
+        $jenis_barang = $this->input->post("jenis_barang");
+        $asal_barang  = $this->input->post("asal_barang");
+        $rak_barang   = $this->input->post("rak_barang");
+        $manufacture  = $this->input->post("manufacture");
+        $stok_min     = $this->input->post("stok_min");
+        $harga        = $this->input->post("harga");
+        $cek_data     = array();
+        foreach ($nama_barang as $key => $value) {
+            $nama_barang_cek = preg_replace('/\s+/', '', $nama_barang[$key]);
+            if (strlen($nama_barang_cek) > 0)
+            {
+                $cek_data[] = strtoupper($nama_barang[$key]).$jenis_barang[$key].$manufacture[$key];
+            }
+            
+        }
+        $get_data = array_diff_key($cek_data, array_unique($cek_data));
+        $pesan["hasil"] 	= (empty($get_data)) ? "ok" : "ada";
+        echo json_encode($pesan);
     }
 
     function simpan_data(){
         $tgl          = date("Y-m-d H:i:s");
+        $tahun        = date('y');
+        $bulan        = date('m');
+        $hari         = date('d');
         $user_id      = $this->session->userdata("iduser");
-        $nama_rak     = strtoupper($this->input->post("nama_rak"));
-        $nama_rak_cek = preg_replace('/\s+/', '', $nama_rak);
-
-        $alias_rak     = $this->input->post("alias_rak");
-        $alias_rak_cek = preg_replace('/\s+/', '', $alias_rak);
+        $no_urut      = $this->input->post("no_urut");
+        $nama_barang  = $this->input->post("nama_barang");
+        $satuan_besar = $this->input->post("satuan_besar");
+        $satuan_kecil = $this->input->post("satuan_kecil");
+        $jenis_barang = $this->input->post("jenis_barang");
+        $asal_barang  = $this->input->post("asal_barang");
+        $rak_barang   = $this->input->post("rak_barang");
+        $manufacture  = $this->input->post("manufacture");
+        $stok_min     = $this->input->post("stok_min");
+        $harga        = $this->input->post("harga");
 
         $this->db->trans_start();
-
-        $cek_duplikat = "(SELECT A.IdRak ,B.Alias
-                        FROM rak A
-                        INNER JOIN rakdetail B ON B.Idrak=A.IdRak 
-                        WHERE replace(A.NamaRak,' ', '')='$nama_rak') A1";
-        $cek_rak = $this->db->from($cek_duplikat)
-                            ->get();
-        
-        $status = "";
-        if($cek_rak->num_rows() > 0){
-            $status = "duplikat";
-        } else {
             $status = "";
-            $data = [
-                        "NamaRak"   => $nama_rak,
-                        "TglInput"  => $tgl,
-                        "UserInput" => $user_id,
-                        "Aktif"     => 1
-                    ];
-            
-            $simpan_data = $this->db->insert("rak",$data);
-            $last_id     = $this->db->insert_id();
-
             $detail = [];
-            foreach ($alias_rak as $key => $value) {
+            $no     = 0;
+            foreach ($nama_barang as $key => $value) {
+                $no++;
+                $this->db->select('RIGHT(A.KodeBarang,3) as kode', FALSE);
+                $this->db->order_by('A.KodeBarang','DESC');    
+                $this->db->limit(1);
+                $query = $this->db->get("barang A");
+                if($query->num_rows() <> 0){      
+                    $data = $query->row();
+                    $kode = intval($data->kode) + $no_urut[$key];
+                }
+                else 
+                { 
+                    $kode = $no_urut[$key];    
+                }
+                $kodemax  = str_pad($kode, 3, "0", STR_PAD_LEFT);
+                $kode_res = "BG".$tahun.$bulan.$hari.$kodemax;
                 $data_detail = [
-                    "IdRak" => $last_id,
-                    "Alias" => strtoupper($alias_rak[$key]),
-                    "Aktif" => 1,
+                    "KodeBarang"    => $kode_res,
+                    "IdSatuanBesar" => $satuan_besar[$key],
+                    "IdSatuanKecil" => $satuan_kecil[$key],
+                    "IdJenis"       => $jenis_barang[$key],
+                    "IdAsal"        => $asal_barang[$key],
+                    "IdRakDetail"   => $rak_barang[$key],
+                    "IdManufacture" => $manufacture[$key],
+                    "NamaBarang"    => strtoupper($nama_barang[$key]),
+                    "Harga"         => str_replace(",","",$harga[$key]),
+                    "StokMinimal"   => str_replace(",","",$stok_min[$key]),
+                    "Aktif"         => 1,
+                    "UserInput"     => $user_id,
+                    "TglInput"      => $tgl,
                 ];
                 array_push($detail,$data_detail);
             }
 
-            $simpan_data_detail = $this->db->insert_batch("rakdetail",$detail);
-        }
+            $simpan_data_detail = $this->db->insert_batch("barang",$detail);
 
         $this->db->trans_complete();
         $pesan = ($this->db->trans_status()) ? "ok" : "gagal";
@@ -159,41 +252,80 @@ class C_barang extends MX_Controller  {
     }
 
     function edit_data(){
-        $id_rak = $this->input->post("id_rak");
-        $sql       = $this->db->query("SELECT A.idRak,B.idRakDetail,A.NamaRak,A.Aktif,B.Alias, B.Aktif as rak_alias_aktif
-                                    FROM rak A
-                                    INNER JOIN rakdetail B ON B.IdRak=A.idRak
-                                    WHERE 1=1 
-                                    AND A.IdRak='$id_rak'");
+        $kode = $this->input->post("kode");
+        $satuan = $this->db->query("SELECT DISTINCT A.IdSatuan,A.NamaSatuan FROM satuan A WHERE A.Aktif=1 ORDER BY A.NamaSatuan ASC");
+        $jenis  = $this->db->query("SELECT DISTINCT A.idJenisBarang,A.JenisBarang FROM jenisbarang A WHERE A.Aktif=1 ORDER BY A.JenisBarang");
+        $asal   = $this->db->query("SELECT DISTINCT A.idJenisPesan,A.NamaJenisPesan FROM jenispesan A WHERE A.Aktif=1 ORDER BY A.NamaJenisPesan");
+        $manuf  = $this->db->query("SELECT DISTINCT A.idmanufacture,A.NamaManufacture FROM manufacture A WHERE A.Aktif=1 ORDER BY A.NamaManufacture");
+        $rak    = $this->db->query("SELECT DISTINCT A.idRakDetail,B.idRak,B.NamaRak,A.Alias 
+                                    FROM rakdetail A INNER JOIN rak B ON B.idRak=A.IdRak
+                                    WHERE A.Aktif=1 AND B.Aktif=1
+                                    ORDER BY B.NamaRak,A.Alias");
+
+        $sql       = $this->db->query("SELECT A.KodeBarang,A.IdSatuanBesar,B.NamaSatuan,A.IdSatuanKecil,C.NamaSatuan AS SATUAN_KECIL  
+                                    ,A.IdJenis,D.JenisBarang,A.IdAsal,E.NamaJenisPesan,A.IdRakDetail,F.NamaRak,F.Alias,A.Harga,A.NamaBarang,A.Aktif
+                                    ,G.idmanufacture,G.NamaManufacture,A.StokMinimal
+                                    FROM barang A
+                                    INNER JOIN satuan B ON B.IdSatuan=A.IdSatuanBesar
+                                    INNER JOIN satuan C ON C.IdSatuan=A.IdSatuanKecil
+                                    INNER JOIN jenisbarang D ON D.idJenisBarang=A.IdJenis
+                                    INNER JOIN jenispesan E ON E.idJenisPesan=A.IdAsal
+                                    INNER JOIN (SELECT DISTINCT X.idRak,X.NamaRak,Y.idRakDetail,Y.Alias FROM rak X INNER JOIN rakdetail Y ON X.idRak=Y.idRak) F ON F.idRakDetail=A.IdRakDetail 
+                                    INNER JOIN manufacture G ON G.idmanufacture=A.IdManufacture
+                                    WHERE 1=1
+                                    AND A.KodeBarang='$kode'");
         
-        $data["id_rak"] = $id_rak;
+        $data["kode"]   = $kode;
         $data["list"]   = $sql;
+        $data["satuan"] = $satuan;
+        $data["jenis"]  = $jenis;
+        $data["asal"]   = $asal;
+        $data["manuf"]  = $manuf;
+        $data["rak"]    = $rak;
         $this->load->view("v_edit_data",$data);
     }
 
     function update_data(){
         $tgl          = date("Y-m-d H:i:s");
+        $tahun        = date('y');
+        $bulan        = date('m');
+        $hari         = date('d');
         $user_id      = $this->session->userdata("iduser");
-        $id_rak       = strtoupper($this->input->post("id_rak"));
-        $nama_rak     = strtoupper($this->input->post("nama_rak"));
-        $nama_rak_cek = preg_replace('/\s+/', '', $nama_rak);
-
-        $idrak_dt        = $this->input->post("idrak_dt");
-        $alias_rak       = $this->input->post("alias_rak");
-        $aktif_rak_alias = $this->input->post("aktif_rak_alias");
-        $alias_rak_cek   = preg_replace('/\s+/', '', $alias_rak);
+        $kode_barang  = $this->input->post("kode_barang");
+        $no_urut      = $this->input->post("no_urut");
+        $nama_barang  = $this->input->post("nama_barang");
+        $satuan_besar = $this->input->post("satuan_besar");
+        $satuan_kecil = $this->input->post("satuan_kecil");
+        $jenis_barang = $this->input->post("jenis_barang");
+        $asal_barang  = $this->input->post("asal_barang");
+        $rak_barang   = $this->input->post("rak_barang");
+        $manufacture  = $this->input->post("manufacture");
+        $stok_min     = $this->input->post("stok_min");
+        $harga        = $this->input->post("harga");
+        $aktif        = $this->input->post("aktif");
 
         $this->db->trans_start();
-        $status = "";
-        foreach ($alias_rak as $key => $value) {
-            $nama_alias = strtoupper($alias_rak[$key]);
-            if($idrak_dt[$key] =="i"){
-                $sql = $this->db->query("INSERT INTO rakdetail(IdRak,Alias,Aktif) VALUES('$id_rak','$nama_alias','1')");
-            } else {
-                $sql = $this->db->query("UPDATE rakdetail A SET A.Alias='$nama_alias',A.Aktif='$aktif_rak_alias[$key]' 
-                                        WHERE A.IdRak='$id_rak' AND A.idRakDetail='$idrak_dt[$key]'");
+            $status = "";
+            $no     = 0;
+            foreach ($nama_barang as $key => $value) {
+                $no++;
+                $data_detail = [
+                    "IdSatuanBesar" => $satuan_besar[$key],
+                    "IdSatuanKecil" => $satuan_kecil[$key],
+                    "IdJenis"       => $jenis_barang[$key],
+                    "IdAsal"        => $asal_barang[$key],
+                    "IdRakDetail"   => $rak_barang[$key],
+                    "IdManufacture" => $manufacture[$key],
+                    "NamaBarang"    => strtoupper($nama_barang[$key]),
+                    "Harga"         => str_replace(",","",$harga[$key]),
+                    "StokMinimal"   => str_replace(",","",$stok_min[$key]),
+                    "Aktif"         => $aktif[$key],
+                    "UserInput"     => $user_id,
+                    "TglInput"      => $tgl,
+                ];
+                $simpan_data_detail = $this->db->update("barang",$data_detail,["KodeBarang" => $kode_barang[$key]]);
             }
-        }
+
         $this->db->trans_complete();
         $pesan = ($this->db->trans_status()) ? "ok" : "gagal";
 
@@ -201,22 +333,6 @@ class C_barang extends MX_Controller  {
         $hasil["status"] = $status;
 
         echo json_encode($hasil);
-    }
-
-    function cek_data_detail(){
-        $alias_rak = $this->input->post("alias_rak");
-        $cek_data = array();
-        foreach ($alias_rak as $key => $value) {
-            if (!empty($alias_rak[$key]))
-            {
-                $cek_data[] = strtoupper($alias_rak[$key]);
-            }
-            
-        }
-        $get_data = array_diff_key($cek_data, array_unique($cek_data));
-        $pesan["pesan"] 	= (empty($get_data)) ? "ok" : "ada";
-        echo json_encode($pesan);
-
     }
 	
 }

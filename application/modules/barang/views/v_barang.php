@@ -15,10 +15,22 @@
         <input type="text" name="nama_src" id="nama_src">
       </td>
 
-      <td>Alias</td>
+      <td>Jenis</td>
       <td>:</td>
       <td>
-        <input type="text" name="alias_src" id="alias_src">
+        <input type="text" name="jenis_src" id="jenis_src">
+      </td>
+
+      <td>Manufacture</td>
+      <td>:</td>
+      <td>
+        <input type="text" name="manuf_src" id="manuf_src">
+      </td>
+
+      <td>Asal</td>
+      <td>:</td>
+      <td>
+        <input type="text" name="asal_src" id="asal_src" style="width: 60px;">
       </td>
 
       <td>Aktif</td>
@@ -43,10 +55,12 @@
           <th>Nama</th>
           <th>Satuan Besar</th>
           <th>Satuan Kecil</th>
-          <th>Harga</th>
           <th>Jenis</th>
           <th>Asal</th>
           <th>Rak</th>
+          <th>Harga</th>
+          <th>Stok Min</th>
+          <th>manufacture</th>
           <th>Aktif</th>
         </tr>
     </thead>
@@ -57,14 +71,14 @@
 <script type="text/javascript">
 
     function input_data(){
-      $.post("<?php echo base_url('rak/c_rak/input_data')?>",{inpt : "input"},function(data){
+      $.post("<?php echo base_url('barang/c_barang/input_data')?>",{inpt : "input"},function(data){
         $("#modal-default").modal("show")
         $("#data_detail").html(data)
       })
     }
 
-    function edit_data(id_rak){
-      $.post("<?php echo base_url('rak/c_rak/edit_data')?>",{id_rak : id_rak},function(data){
+    function edit_data(kode){
+      $.post("<?php echo base_url('barang/c_barang/edit_data')?>",{kode : kode},function(data){
         $("#modal-default").modal("show")
         $("#data_detail").html(data)
       })
@@ -92,7 +106,9 @@
           "type": "POST",
           "data": function ( data ) {
               data.nama_src         = $('#nama_src').val()
-              data.alias_src        = $('#alias_src').val()
+              data.jenis_src        = $('#jenis_src').val()
+              data.manuf_src        = $('#manuf_src').val()
+              data.asal_src         = $('#asal_src').val()
               data.status_aktif_src = $('#status_aktif_src').val()
           }
       },

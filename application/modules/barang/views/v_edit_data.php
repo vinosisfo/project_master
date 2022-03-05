@@ -3,63 +3,105 @@
 </style>
 <form id="form_data" autocomplete="off">
     <div style="margin: 2px;">
-        <?php $head = $list->row() ?>
-        <table class="table table-condensed" style="max-width: 50%;">
-            <tr>
-                <td>Nama Rak</td>
-                <td>:</td>
-                <td>
-                    <input type="hidden" name="id_rak" id="id_rak" maxlength="100" readonly value="<?php echo $head->idRak ?>">
-                    <input type="text" class="transparant" name="nama_rak" id="nama_rak" maxlength="100" style="text-transform: uppercase;" readonly value="<?php echo $head->NamaRak ?>">
-                </td>
-            </tr>
-            <tr>
-                <td>Aktif</td>
-                <td>:</td>
-                <td>
-                    <select name="aktif_rak" id="aktif_rak">
-                        <?php if($head->Aktif=="1"){ ?>
-                        <option value="1">Ya</option>
-                        <option value="0">Tdk</option>
-                        <?php } else { ?>
-                            <option value="0">Tdk</option>
-                            <option value="1">Ya</option>
-                        <?php } ?>
-                    </select>
-                </td>
-            </tr>
-        </table>
-        <button class="btn btn-danger btn-xs" type="button" onclick="tambah_baris(this)">Tambah</button>
+        <!-- <button class="btn btn-danger btn-xs" type="button" onclick="tambah_baris(this)">Tambah</button> -->
         <div class="tableFixHead">
-            <table class="table table-condensed" style="max-width: 95%;">
+            <table class="table table-condensed" style="max-width: 150%;">
                 <thead>
                     <tr>
                         <th></th>
                         <th></th>
-                        <th>Alias</th>
-                        <th>Aktif</th>
+                        <th>Nama Barang</th>
+                        <th>Satuan Besar</th>
+                        <th>Satuan Kecil</th>
+                        <th>Jenis</th>
+                        <th>Asal</th>
+                        <th>Rak</th>
+                        <th>Manufacture</th>
+                        <th>Stok Min</th>
+                        <th>Harga</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody id="row_baru">
                     <?php 
-                    $no = 0;
+                    $no=0;
                     foreach ($list->result() as $data) {
                         $no++; ?>
                         <tr>
                             <td>
                                 <?php echo $no ?>
+                                <input type="hidden" name="kode_barang[]" id="kode_barang_<?php echo $no ?>" value="<?php echo $data->KodeBarang ?>" readonly>
                                 <input type="hidden" name="no_urut[]" id="no_urut_<?php echo $no ?>" class="no_urut" value="<?php echo $no ?>" readonly>
-                                <input type="hidden" name="idrak_dt[]" id="idrak_dt_<?php echo $no ?>" class="idrak_dt" value="<?php echo $data->idRakDetail ?>" readonly>
                             </td>
                             <td></td>
                             <td>
-                                <input type="text" name="alias_rak[]" id="alias_rak_'+no_akhir_set+'" maxlength="50" style="width : 98%;" value="<?php echo $data->Alias ?>" onblur="cek_data_rak(this,'<?php echo $no ?>')">
+                                <input value="<?php echo $data->NamaBarang ?>" type="text" name="nama_barang[]" id="nama_barang_<?php echo $no ?>" maxlength="200" style="width : 200px;" onblur="cek_data_barang(this,<?php echo $no ?>)">
                             </td>
                             <td>
-                                <select name="aktif_rak_alias[]" id="aktif_rak_alias_<?php echo $no ?>">
-                                    <?php if($data->rak_alias_aktif=="1"){ ?>
-                                    <option value="1">Ya</option>
-                                    <option value="0">Tdk</option>
+                                <select name="satuan_besar[]" id="satuan_besar_<?php echo $no ?>" style="width : 120%;">
+                                    <option value="">PILIH</option>
+                                    <?php foreach ($satuan->result() as $stn) {
+                                        $select = ($data->IdSatuanBesar==$stn->IdSatuan) ? "selected" : ""; ?>
+                                        <option <?php echo $select ?> value="<?php echo $stn->IdSatuan ?>"><?php echo $stn->NamaSatuan ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="satuan_kecil[]" id="satuan_kecil_<?php echo $no ?>" style="width : 120%;">
+                                    <option value="">PILIH</option>
+                                    <?php foreach ($satuan->result() as $stn) {
+                                        $select = ($data->IdSatuanKecil==$stn->IdSatuan) ? "selected" : ""; ?>
+                                        <option <?php echo $select ?> value="<?php echo $stn->IdSatuan ?>"><?php echo $stn->NamaSatuan ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="jenis_barang[]" id="jenis_barang_<?php echo $no ?>" style="width : 120%;" onchange="cek_data_barang(this,<?php echo $no ?>)">
+                                    <option value="">PILIH</option>
+                                    <?php foreach ($jenis->result() as $jns) {
+                                        $select = ($data->IdJenis==$jns->idJenisBarang) ? "selected" : ""; ?>
+                                        <option <?php echo $select ?> value="<?php echo $jns->idJenisBarang ?>"><?php echo $jns->JenisBarang ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="asal_barang[]" id="asal_barang_<?php echo $no ?>" style="width : 120%;">
+                                    <option value="">PILIH</option>
+                                    <?php foreach ($asal->result() as $asl) { 
+                                        $select = ($data->IdAsal==$asl->idJenisPesan) ? "selected" : "";?>
+                                        <option <?php echo $select ?> value="<?php echo $asl->idJenisPesan ?>"><?php echo $asl->NamaJenisPesan ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="rak_barang[]" id="rak_barang_<?php echo $no ?>" style="width : 120%;">
+                                    <option value="">PILIH</option>
+                                    <?php foreach ($rak->result() as $rk) {
+                                        $select = ($data->IdRakDetail==$rk->idRakDetail) ? "selected" : ""; ?>
+                                        <option <?php echo $select ?> value="<?php echo $rk->idRakDetail ?>"><?php echo $rk->NamaRak." - ".$rk->Alias ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <select name="manufacture[]" id="manufacture_<?php echo $no ?>" style="width : 120%;" onchange="cek_data_barang(this,<?php echo $no ?>)">
+                                    <option value="">PILIH</option>
+                                    <?php foreach ($manuf->result() as $mnf) {
+                                        $select = ($data->idmanufacture==$mnf->idmanufacture) ? "selected" : ""; ?>
+                                        <option <?php echo $select ?> value="<?php echo $mnf->idmanufacture ?>"><?php echo $mnf->NamaManufacture ?></option>
+                                    <?php } ?>
+                                </select>
+                            </td>
+                            <td>
+                                <input value="<?php echo number_format($data->StokMinimal)?>" type="text" name="stok_min[]" id="stok_min_<?php echo $no ?>" maxlength="10" style="width : 60px; text-align : right;" onkeyup="hanya_angka(this,<?php echo $no ?>)">
+                            </td>
+                            <td>
+                                <input value="<?php echo number_format($data->Harga)?>" type="text" name="harga[]" id="harga_<?php echo $no ?>" maxlength="20" style="width : 80px; text-align : right;" onkeyup="hanya_angka(this,<?php echo $no ?>)">
+                            </td>
+                            <td>
+                                <select name="aktif[]" id="aktif_<?php echo $no ?>">
+                                    <?php if($data->Aktif==1){?>
+                                        <option value="1">Ya</option>
+                                        <option value="0">Tdk</option>
                                     <?php } else { ?>
                                         <option value="0">Tdk</option>
                                         <option value="1">Ya</option>
@@ -73,25 +115,13 @@
         </div>
     </div>
     <div>
-        <button class="btn btn-primary btn-xs" id="btn_simpan" type="button" onclick="simpan_data(this)">Simpan</button>
+        <button class="btn btn-primary btn-xs" id="btn_simpan" type="button" onclick="simpan_cek_data(this)">Simpan</button>
         <button class="btn btn-danger btn-xs" type="button" onclick="close_modal(this)">Close</button>
     </div>
 
 </form>
 
 <script>
-    function cek_data_rak(data,urut){
-        idrak    = $("#id_rak").val()
-        nama_rak = $("#nama_rak").val()
-        alias    = $("#alias_rak_"+urut).val()
-        $.post('<?php echo base_url('rak/c_rak/cek_data_detail')?>',$("#form_data").serialize(),function(data){
-            if(data.pesan=="ada"){
-                error_msg("Alias Tidak Boleh Sama "+alias);
-                $("#alias_rak_"+urut).val("")
-                return false
-            }
-        },"json")
-    }
 
     function tambah_baris(urut=''){
         no           = parseInt(urut);                                        //parseInt('<?php //echo $no ?>')
@@ -104,14 +134,67 @@
                         '<td>'+
                             +no_akhir_set+
                             '<input type="hidden" name="no_urut[]" id="no_urut_'+no_akhir_set+'" class="no_urut" value="'+no_akhir_set+'" readonly>'+
-                            '<input type="hidden" name="idrak_dt[]" id="idrak_dt_'+no_akhir_set+'" class="idrak_dt" value="i" readonly>'+
                         '</td>'+
                         '<td>'+btn_hapus+'</td>'+
                         '<td>'+
-                            '<input type="text" name="alias_rak[]" id="alias_rak_'+no_akhir_set+'" maxlength="50" style="width : 98%;" onblur="cek_data_rak(this,'+no_akhir_set+')">'+
+                            '<input type="text" name="nama_barang[]" id="nama_barang_'+no_akhir_set+'" maxlength="200" style="width : 200px;" onblur="cek_data_barang(this,'+no_akhir_set+')">'+
                         '</td>'+
                         '<td>'+
-                            '<select name="aktif_rak_alias[]" id="aktif_rak_alias_'+no_akhir_set+'">'+
+                            '<select name="satuan_besar[]" id="satuan_besar_'+no_akhir_set+'" style="width : 120%;">'+
+                                '<option value="">PILIH</option>'+
+                                <?php foreach ($satuan->result() as $stn) { ?>
+                                    '<option value="<?php echo $stn->IdSatuan ?>"><?php echo $stn->NamaSatuan ?></option>'+
+                                <?php } ?>
+                            '</select>'+
+                        '</td>'+
+                        '<td>'+
+                            '<select name="satuan_kecil[]" id="satuan_kecil_'+no_akhir_set+'" style="width : 120%;">'+
+                                '<option value="">PILIH</option>'+
+                                <?php foreach ($satuan->result() as $stn) { ?>
+                                    '<option value="<?php echo $stn->IdSatuan ?>"><?php echo $stn->NamaSatuan ?></option>'+
+                                <?php } ?>
+                            '</select>'+
+                        '</td>'+
+                        '<td>'+
+                            '<select name="jenis_barang[]" id="jenis_barang_'+no_akhir_set+'" style="width : 120%;" onchange="cek_data_barang(this,'+no_akhir_set+')">'+
+                                '<option value="">PILIH</option>'+
+                                <?php foreach ($jenis->result() as $jns) { ?>
+                                    '<option value="<?php echo $jns->idJenisBarang ?>"><?php echo $jns->JenisBarang ?></option>'+
+                                <?php } ?>
+                            '</select>'+
+                        '</td>'+
+                        '<td>'+
+                            '<select name="asal_barang[]" id="asal_barang_'+no_akhir_set+'" style="width : 120%;">'+
+                                '<option value="">PILIH</option>'+
+                                <?php foreach ($asal->result() as $asl) { ?>
+                                    '<option value="<?php echo $asl->idJenisPesan ?>"><?php echo $asl->NamaJenisPesan ?></option>'+
+                                <?php } ?>
+                            '</select>'+
+                        '</td>'+
+                        '<td>'+
+                            '<select name="rak_barang[]" id="rak_barang_'+no_akhir_set+'" style="width : 120%;">'+
+                                '<option value="">PILIH</option>'+
+                                <?php foreach ($rak->result() as $rk) { ?>
+                                    '<option value="<?php echo $rk->idRakDetail ?>"><?php echo $rk->NamaRak." - ".$rk->Alias ?></option>'+
+                                <?php } ?>
+                            '</select>'+
+                        '</td>'+
+                        '<td>'+
+                            '<select name="manufacture[]" id="manufacture_'+no_akhir_set+'" style="width : 120%;" onchange="cek_data_barang(this,'+no_akhir_set+')">'+
+                                '<option value="">PILIH</option>'+
+                                <?php foreach ($manuf->result() as $mnf) { ?>
+                                    '<option value="<?php echo $mnf->idmanufacture ?>"><?php echo $mnf->NamaManufacture ?></option>'+
+                                <?php } ?>
+                            '</select>'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="stok_min[]" id="stok_min_'+no_akhir_set+'" maxlength="10" style="width : 60px; text-align : right;" onkeyup="hanya_angka(this,'+no_akhir_set+')">'+
+                        '</td>'+
+                        '<td>'+
+                            '<input type="text" name="harga[]" id="harga_'+no_akhir_set+'" maxlength="20" style="width : 80px; text-align : right;" onkeyup="hanya_angka(this,'+no_akhir_set+')">'+
+                        '</td>'+
+                        '<td>'+
+                            '<select name="aktif[]" id="aktif_'+no_akhir_set+'">'+
                                 '<option value="1">Ya</option>'+
                             '</select>'+
                         '</td>'+
@@ -120,53 +203,155 @@
         $("#row_baru").append(row_baris)
     }
 
+    function cek_data_barang(data,urut){
+        $.post("<?php echo base_url('barang/c_barang/cek_data_barang')?>",$("#form_data").serialize()+"&jenis_update=update",function(data){
+            if(data.hasil=="ada"){
+                
+            } 
+        },"json")
+    }
+
     function hapus_row(data){
         $(data).closest('tr').remove();
 		return false;
     }
 
-    
-
-    function simpan_data(){
-        nama_rak     = $("#nama_rak").val()
-        nama_rak_cek = nama_rak.replace(/\s+/g, '');
-
-        if(nama_rak_cek==0){
-            error_msg("Nama Rak Tidak Boleh Kosong")
-            $("#nama_rak").focus()
-            return false
-        }
-
-        v_alias = document.getElementsByName('alias_rak[]');
-        for (i=0; i<v_alias.length; i++)
-        {
-            nomor = parseInt(i)+1;
-            if (v_alias[i].value == "")
+    function simpan_cek_data(){
+        $.post("<?php echo base_url('barang/c_barang/cek_data_barang')?>",$("#form_data").serialize()+"&jenis_update=update",function(data){
+            if(data.hasil=="ada"){
+                error_msg("Duplikat Data Pada Baris 1 Data Sudah Ada.\nSilahkan Isi Dengan Data Lain");
+                $("#nama_barang_1").focus()
+                return false;
+            } else if(data.hasil=="ok")
             {
-                error_msg("Alias Rak Tidak Boleh Kosong")
-                $("#alias_rak_"+nomor).focus()   
-                return false;
-            }
-        }
-        $("#btn_simpan").prop("disabled",true)
-        $.post("<?php echo base_url('rak/c_rak/update_data')?>",$("#form_data").serialize(),function(data){
-            if(data.status=="duplikat"){
-                error_msg("Duplikat Data Rak "+nama_rak+" Sudah Ada. Proses Tidak Dapat Dilanjutkan")
-                $("#btn_simpan").prop("disabled",false)
-                return false;
-            }
-            else {
-                if(data.pesan=="ok"){
-                    table.ajax.reload();
-                    succes_msg("Data Berhasil Disimpan")
-                    close_modal()
-                } else {
-                    error_msg("Error Hubungi IT")
-                    $("#btn_simpan").prop("disabled",false)
-                    return false
-                }
+                simpan_data()
             }
         },"json")
+    }
+
+    function simpan_data(){
+        v_barang = document.getElementsByName('nama_barang[]');
+        for (i=0; i<v_barang.length; i++)
+        {
+            nomor           = parseInt(i)+1;
+            nama_barang     = $("#nama_barang_"+nomor).val()
+            nama_barang_cek = nama_barang.replace(/\s+/g, '');
+            if (nama_barang_cek == "0")
+            {
+                error_msg("Nama Barang Tidak Boleh Kosong")
+                $("#nama_barang_"+nomor).focus()   
+                return false;
+            }
+        }
+
+        v_sbesar = document.getElementsByName('satuan_besar[]');
+        for (i=0; i<v_sbesar.length; i++)
+        {
+            nomor = parseInt(i)+1;
+            if (v_sbesar[i].value == "")
+            {
+                error_msg("Satuan Besar Tidak Boleh Kosong")
+                $("#satuan_besar_"+nomor).focus()   
+                return false;
+            }
+        }
+
+        v_skecil = document.getElementsByName('satuan_kecil[]');
+        for (i=0; i<v_skecil.length; i++)
+        {
+            nomor = parseInt(i)+1;
+            if (v_skecil[i].value == "")
+            {
+                error_msg("Satuan Kecil Tidak Boleh Kosong")
+                $("#satuan_kecil_"+nomor).focus()   
+                return false;
+            }
+        }
+
+        v_jenis = document.getElementsByName('jenis_barang[]');
+        for (i=0; i<v_jenis.length; i++)
+        {
+            nomor = parseInt(i)+1;
+            if (v_jenis[i].value == "")
+            {
+                error_msg("jenis Barang Tidak Boleh Kosong")
+                $("#jenis_barang_"+nomor).focus()   
+                return false;
+            }
+        }
+
+        v_asal = document.getElementsByName('asal_barang[]');
+        for (i=0; i<v_asal.length; i++)
+        {
+            nomor = parseInt(i)+1;
+            if (v_asal[i].value == "")
+            {
+                error_msg("Asal Barang Tidak Boleh Kosong")
+                $("#asal_barang_"+nomor).focus()   
+                return false;
+            }
+        }
+
+        v_rak = document.getElementsByName('rak_barang[]');
+        for (i=0; i<v_rak.length; i++)
+        {
+            nomor = parseInt(i)+1;
+            if (v_rak[i].value == "")
+            {
+                error_msg("Rak Barang Tidak Boleh Kosong")
+                $("#rak_barang_"+nomor).focus()   
+                return false;
+            }
+        }
+
+        v_manuf = document.getElementsByName('manufacture[]');
+        for (i=0; i<v_manuf.length; i++)
+        {
+            nomor = parseInt(i)+1;
+            if (v_manuf[i].value == "")
+            {
+                error_msg("Manufacture Tidak Boleh Kosong")
+                $("#manufacture_"+nomor).focus()   
+                return false;
+            }
+        }
+
+        v_stok_min = document.getElementsByName('stok_min[]');
+        for (i=0; i<v_stok_min.length; i++)
+        {
+            nomor = parseInt(i)+1;
+            if (v_stok_min[i].value == "")
+            {
+                error_msg("Stok Minimal Tidak Boleh Kosong")
+                $("#stok_min_"+nomor).focus()   
+                return false;
+            }
+        }
+
+        v_harga = document.getElementsByName('harga[]');
+        for (i=0; i<v_harga.length; i++)
+        {
+            nomor = parseInt(i)+1;
+            if (v_harga[i].value == "")
+            {
+                error_msg("Harga Tidak Boleh Kosong")
+                $("#harga_"+nomor).focus()   
+                return false;
+            }
+        }
+        
+        $("#btn_simpan").prop("disabled",true)
+        $.post("<?php echo base_url('barang/c_barang/update_data')?>",$("#form_data").serialize(),function(data){
+            if(data.pesan=="ok"){
+                table.ajax.reload();
+                succes_msg("Data Berhasil Disimpan")
+                close_modal()
+            } 
+        },"json").fail(function(data){
+            error_msg("Error Hubungi IT")
+            $("#btn_simpan").prop("disabled",false)
+            return false
+        })
     }
 
     var $th = $('.tableFixHead').find('thead th')
