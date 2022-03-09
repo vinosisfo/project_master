@@ -1,5 +1,5 @@
 <style>
-    .tableFixHead { overflow-y: auto; height: 300px; width : 95%; }
+    .tableFixHead { overflow-y: auto; height: 280px; width : 95%; }
 </style>
 <form id="form_data" autocomplete="off">
     <div style="margin: 2px;">

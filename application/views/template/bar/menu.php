@@ -57,6 +57,13 @@
                 <p>Barang</p>
               </a>
             </li>
+
+            <li class="nav-item">
+              <a href="<?php echo base_url('departemen/c_departemen')?>" class="nav-link">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Departemen</p>
+              </a>
+            </li>
           </ul>
         </li>
 
