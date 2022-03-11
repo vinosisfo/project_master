@@ -17,9 +17,11 @@ class C_jenisbarang extends MX_Controller  {
 
 	public function index()
 	{	
-		$data["main_content"] = 'v_jenisbarang';
+        $back_menu = $this->get_support_lib_new->get_url_set();
+
+        $data["back_menu"]    = $back_menu;
+        $data["main_content"] = 'v_jenisbarang';
         $this->load->view("template/bar/main_content",$data);
-        // test edit disini
 	}
 
 	function get_data()

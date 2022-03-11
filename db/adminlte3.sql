@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 08 Mar 2022 pada 10.22
+-- Waktu pembuatan: 11 Mar 2022 pada 10.04
 -- Versi server: 10.4.17-MariaDB
 -- Versi PHP: 8.0.2
 
@@ -83,6 +83,15 @@ CREATE TABLE `departemen` (
   `UserInput` int(11) NOT NULL,
   `TglInput` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `departemen`
+--
+
+INSERT INTO `departemen` (`IdDepartemen`, `NamaDepartemen`, `Singkatan`, `Aktif`, `UserInput`, `TglInput`) VALUES
+(1, 'plant 1', 'p1', 1, 1, '2022-03-09 09:00:59'),
+(2, 'plant 2', 'p2', 1, 1, '2022-03-09 09:29:36'),
+(3, 'plant 3 e', 'p3', 1, 1, '2022-03-09 09:49:24');
 
 -- --------------------------------------------------------
 
@@ -233,6 +242,25 @@ CREATE TABLE `menu` (
   `NoUrut` int(11) NOT NULL,
   `Aktif` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data untuk tabel `menu`
+--
+
+INSERT INTO `menu` (`KodeMenu`, `NamaMenu`, `SubMenu`, `DetailMenu`, `UrlMenu`, `JenisMenu`, `NoUrut`, `Aktif`) VALUES
+('MN220311001', 'HRD', '', '', 'NULL', 'head', 10, 1),
+('MN220311002', 'Master HRD', 'MN220311001', '', 'group_menu/master_hrd', 'sub', 10, 1),
+('MN220311003', 'Departemen', 'MN220311001', 'MN220311002', 'departemen/c_departemen', 'list', 10, 1),
+('MN220311004', 'Bagian', 'MN220311001', 'MN220311002', 'bagian/c_bagian', 'list', 20, 1),
+('MN220311005', 'Jabatan', 'MN220311001', 'MN220311002', 'jabatan/c_jabatan', 'list', 30, 1),
+('MN220311006', 'Karyawan', 'MN220311001', 'MN220311002', 'karyawan/c_karyawan', 'list', 40, 1),
+('MN220311007', 'GUDANG', '', '', '', 'head', 20, 1),
+('MN220311008', 'Master Gudang', 'MN220311007', '', 'group_menu/master_gudang', 'sub', 10, 1),
+('MN220311009', 'Barang', 'MN220311007', 'MN220311008', 'barang/c_barang', 'list', 10, 1),
+('MN220311010', 'Jenis Barang', 'MN220311007', 'MN220311008', 'jenisbarang/c_jenisbarang', 'list', 20, 1),
+('MN220311011', 'Rak', 'MN220311007', 'MN220311008', 'rak/c_rak', 'list', 30, 1),
+('MN220311012', 'Satuan', 'MN220311007', 'MN220311008', 'satuan/c_satuan', 'list', 40, 1),
+('MN220311013', 'SETTING', '', '', '', 'head', 1000, 1);
 
 -- --------------------------------------------------------
 
@@ -445,6 +473,12 @@ ALTER TABLE `usermenugroup`
 --
 ALTER TABLE `bagiandepartemen`
   MODIFY `IdBagianDepartemen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT untuk tabel `departemen`
+--
+ALTER TABLE `departemen`
+  MODIFY `IdDepartemen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT untuk tabel `jabatan`

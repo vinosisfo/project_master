@@ -1,5 +1,11 @@
 <table class="customers" style="table-layout : auto;white-space : nowrap;">
   <tr>
+    <td>
+      <a href="<?php echo base_url(''.$back_menu.'')?>">
+        <ion-icon size="small" name="home-outline"></ion-icon>
+        <ion-icon name="ellipsis-vertical-outline" style="pointer-events: none;"></ion-icon>
+      </a>
+    </td>
     <td>Data Jenis Barang</td>
     <td>
       <button class="btn btn-primary btn-xs" type="button" onclick="input_data(this)">Input</button>

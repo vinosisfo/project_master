@@ -17,9 +17,11 @@ class C_barang extends MX_Controller  {
 
 	public function index()
 	{	
-		$data["main_content"] = 'v_barang';
+        $back_menu = $this->get_support_lib_new->get_url_set();
+        $data["back_menu"]  = $back_menu;
+        $data["main_content"] = 'v_barang';
         $this->load->view("template/bar/main_content",$data);
-	}
+	} 
 
 	function get_data()
     {

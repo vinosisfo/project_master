@@ -15,58 +15,37 @@
     </div>
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-        <li class="nav-item">
-          <a href="#" class="nav-link">
-            <i class="nav-icon fas fa-th"></i>
-            <p>
-              Dashboard
-            </p>
-          </a>
-          <ul class="nav nav-treeview">
-            <li class="nav-item">
-              <a href="<?php echo base_url('test_main/c_main')?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Dashboard v1</p>
-              </a>
-            </li>
+        <?php
+        $menu_head = $this->get_support_lib_new->get_menu_head();
+        foreach ($menu_head->result() as $m_head) { 
+          $kode_menu = $m_head->KodeMenu;
+          $sub_menu  = $m_head->SubMenu;
+          ?>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-th"></i>
+              <p>
+                <?php echo $m_head->NamaMenu ?>
+              </p>
+            </a>
+            <?php
+            $sub_menu = $this->get_support_lib_new->get_sub_menu($kode_menu);
+            foreach ($sub_menu->result() as $m_sub) {
+              $url_menu      = $m_sub->UrlMenu;
+              $nama_menu     = $m_sub->NamaMenu;
+              $kode_menu_sub = $m_sub->KodeMenu; ?>
 
-            <li class="nav-item">
-              <a href="<?php echo base_url('satuan/c_satuan')?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Satuan</p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="<?php echo base_url('rak/c_rak')?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Rak</p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="<?php echo base_url('jenisbarang/c_jenisbarang')?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Jenis Barang</p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="<?php echo base_url('barang/c_barang')?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Barang</p>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a href="<?php echo base_url('departemen/c_departemen')?>" class="nav-link">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Departemen</p>
-              </a>
-            </li>
-          </ul>
-        </li>
-
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="<?php echo base_url(''.$url_menu.'')?>/<?php echo $kode_menu_sub ?>" class="nav-link">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p><?php echo $nama_menu ?></p>
+                  </a>
+                </li>
+              </ul>
+            <?php } ?>
+          </li>
+        <?php } ?>
         <li class="nav-item">
           <a href="<?php echo base_url('IndexLog/logout_proses')?>" class="nav-link">
             <i class="far fa-circle nav-icon"></i>

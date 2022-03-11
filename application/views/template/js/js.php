@@ -25,7 +25,8 @@
 <script src="<?php echo base_url('assets/izitoast/dist/js/iziToast.min.js')?>"></script>
 <!-- Select2 -->
 <script src="<?php echo base_url('assets/AdminLTE-3.1.0/plugins/select2/js/select2.full.min.js')?>"></script>
-
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 <!-- Page specific script -->
 <script>
 	$.widget.bridge('uibutton', $.ui.button)
