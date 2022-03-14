@@ -31,12 +31,12 @@ $this->load->view('template/js/js'); ?>
 <div class="modal fade" class="modal-default" id="modal-default" data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog modal-dialog_df modal-xl">
         <div class="modal-content modal-content_df">
-            <div class="modal-header">
+            <!-- <div class="modal-header">
                 <h4 class="modal-title">Default Modal</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-            </div>
+            </div> -->
             <div class="modal-body">
                 <div id="data_detail"></div>
             </div>

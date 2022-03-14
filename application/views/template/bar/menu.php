@@ -33,7 +33,7 @@
             foreach ($sub_menu->result() as $m_sub) {
               $url_menu      = $m_sub->UrlMenu;
               $nama_menu     = $m_sub->NamaMenu;
-              $kode_menu_sub = $m_sub->KodeMenu; ?>
+              $kode_menu_sub = ($m_sub->JenisMenu=="sub") ? "/".$m_sub->KodeMenu : ""; ?>
 
               <ul class="nav nav-treeview">
                 <li class="nav-item">

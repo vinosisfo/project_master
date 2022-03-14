@@ -30,11 +30,11 @@ class get_support_lib_new{
 
     function get_sub_menu($kode_menu){
         $ci  = & get_instance();
-        $sql = $ci->db->query("SELECT DISTINCT A.KodeMenu,A.NamaMenu,A.SubMenu,A.UrlMenu 
+        $sql = $ci->db->query("SELECT DISTINCT A.KodeMenu,A.NamaMenu,A.SubMenu,A.UrlMenu,A.JenisMenu 
                             FROM menu A 
                             WHERE 1=1
                             AND A.Aktif=1
-                            AND A.JenisMenu='sub' 
+                            AND IFNULL(A.DetailMenu,'')=''
                             AND A.SubMenu='$kode_menu'
                             ORDER BY A.NoUrut");
         return $sql;
