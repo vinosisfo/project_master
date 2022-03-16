@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 16 Mar 2022 pada 10.12
+-- Waktu pembuatan: 11 Mar 2022 pada 10.04
 -- Versi server: 10.4.17-MariaDB
 -- Versi PHP: 8.0.2
 
@@ -42,10 +42,8 @@ CREATE TABLE `bagiandepartemen` (
 --
 
 INSERT INTO `bagiandepartemen` (`IdBagianDepartemen`, `IdDepartemen`, `NamaBagian`, `SingkatanBagian`, `Aktif`, `UserInput`, `TglInput`) VALUES
-(1, 1, 'PPIC edit', 'PPIC', 0, 1, '2022-03-12 06:04:37'),
-(2, 1, 'ppic', 'ppic', 1, 1, '2022-03-07 15:37:40'),
-(3, 1, 'Bagian A', 'A', 1, 1, '2022-03-12 05:54:49'),
-(4, 1, 'Bagian B a', 'B', 1, 1, '2022-03-12 06:04:20');
+(1, 1, 'PPIC', 'PPIC', 1, 1, '2022-03-07 15:36:46'),
+(2, 1, 'ppic', 'ppic', 1, 1, '2022-03-07 15:37:40');
 
 -- --------------------------------------------------------
 
@@ -111,14 +109,6 @@ CREATE TABLE `groupuser` (
   `TglEdit` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
---
--- Dumping data untuk tabel `groupuser`
---
-
-INSERT INTO `groupuser` (`KodeGroupUser`, `NamaGroupUser`, `Aktif`, `UserInput`, `TglInput`, `UserEdit`, `TglEdit`) VALUES
-('GU220316001', 'manager HRD', 1, 1, '2022-03-16 08:13:16', NULL, NULL),
-('GU220316002', 'Manager Gudang', 1, 1, '2022-03-16 08:37:52', NULL, NULL);
-
 -- --------------------------------------------------------
 
 --
@@ -155,9 +145,7 @@ CREATE TABLE `jabatan` (
 --
 
 INSERT INTO `jabatan` (`IdJabatan`, `Namajabatan`, `NoUrut`, `Aktif`, `UserInput`, `TglInput`) VALUES
-(1, 'kepala bagian', 3, 1, 1, '2022-03-07 15:38:59'),
-(6, 'KADEPT 1', 4, 0, 1, '0000-00-00 00:00:00'),
-(7, 'KADEPT', 2, 1, 1, '0000-00-00 00:00:00');
+(1, 'kepala bagian', 3, 1, 1, '2022-03-07 15:38:59');
 
 -- --------------------------------------------------------
 
@@ -272,28 +260,7 @@ INSERT INTO `menu` (`KodeMenu`, `NamaMenu`, `SubMenu`, `DetailMenu`, `UrlMenu`, 
 ('MN220311010', 'Jenis Barang', 'MN220311007', 'MN220311008', 'jenisbarang/c_jenisbarang', 'list', 20, 1),
 ('MN220311011', 'Rak', 'MN220311007', 'MN220311008', 'rak/c_rak', 'list', 30, 1),
 ('MN220311012', 'Satuan', 'MN220311007', 'MN220311008', 'satuan/c_satuan', 'list', 40, 1),
-('MN220311013', 'SETTING', '', '', '', 'head', 1000, 1),
-('MN220314001', 'User', 'MN220311013', '', 'user/c_user', 'list', 10, 1),
-('MN220314002', 'Group User', 'MN220311013', '', 'groupuser/c_groupuser', 'list', 20, 1);
-
--- --------------------------------------------------------
-
---
--- Struktur dari tabel `menuuser`
---
-
-CREATE TABLE `menuuser` (
-  `KdKaryawan` varchar(10) NOT NULL,
-  `KodeUserMenuGroup` varchar(45) NOT NULL,
-  `KodeGroupUserMenu` varchar(45) NOT NULL,
-  `Input` int(11) DEFAULT NULL,
-  `Edit` int(11) DEFAULT NULL,
-  `Hapus` int(11) DEFAULT NULL,
-  `list` int(11) DEFAULT NULL,
-  `approve` int(11) DEFAULT NULL,
-  `TglInput` datetime DEFAULT NULL,
-  `UserInput` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+('MN220311013', 'SETTING', '', '', '', 'head', 1000, 1);
 
 -- --------------------------------------------------------
 
@@ -369,25 +336,20 @@ INSERT INTO `tbuser` (`IdUser`, `KodeKaryawan`, `Username`, `Password`, `Aktif`)
 
 CREATE TABLE `usermenugroup` (
   `KodeUserMenuGroup` varchar(11) NOT NULL,
-  `KodeGroupUserMenu` varchar(11) NOT NULL
+  `KodeKaryawan` varchar(10) NOT NULL DEFAULT '',
+  `KodeGroupUserMenu` varchar(11) NOT NULL,
+  `Input` int(11) NOT NULL,
+  `Edit` int(11) NOT NULL,
+  `Batal` int(11) NOT NULL,
+  `Hapus` int(11) NOT NULL,
+  `Approve` int(11) NOT NULL,
+  `AksesList` int(11) NOT NULL,
+  `Aktif` int(11) NOT NULL,
+  `UserInput` int(11) NOT NULL,
+  `TglInput` datetime NOT NULL,
+  `UserEdit` int(11) DEFAULT NULL,
+  `TglEdit` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data untuk tabel `usermenugroup`
---
-
-INSERT INTO `usermenugroup` (`KodeUserMenuGroup`, `KodeGroupUserMenu`) VALUES
-('GU220316001', 'MN220311001'),
-('GU220316001', 'MN220311002'),
-('GU220316001', 'MN220311003'),
-('GU220316001', 'MN220311004'),
-('GU220316001', 'MN220311005'),
-('GU220316002', 'MN220311007'),
-('GU220316002', 'MN220311008'),
-('GU220316002', 'MN220311009'),
-('GU220316002', 'MN220311010'),
-('GU220316002', 'MN220311011'),
-('GU220316002', 'MN220311012');
 
 --
 -- Indexes for dumped tables
@@ -469,12 +431,6 @@ ALTER TABLE `menu`
   ADD PRIMARY KEY (`KodeMenu`);
 
 --
--- Indeks untuk tabel `menuuser`
---
-ALTER TABLE `menuuser`
-  ADD PRIMARY KEY (`KdKaryawan`,`KodeUserMenuGroup`,`KodeGroupUserMenu`);
-
---
 -- Indeks untuk tabel `rak`
 --
 ALTER TABLE `rak`
@@ -504,7 +460,8 @@ ALTER TABLE `tbuser`
 -- Indeks untuk tabel `usermenugroup`
 --
 ALTER TABLE `usermenugroup`
-  ADD PRIMARY KEY (`KodeUserMenuGroup`,`KodeGroupUserMenu`),
+  ADD PRIMARY KEY (`KodeUserMenuGroup`,`KodeKaryawan`,`KodeGroupUserMenu`),
+  ADD KEY `FK_usermenugroup_tbuser` (`KodeKaryawan`),
   ADD KEY `FK_usermenugroup_usermenugroup` (`KodeGroupUserMenu`);
 
 --
@@ -515,7 +472,7 @@ ALTER TABLE `usermenugroup`
 -- AUTO_INCREMENT untuk tabel `bagiandepartemen`
 --
 ALTER TABLE `bagiandepartemen`
-  MODIFY `IdBagianDepartemen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `IdBagianDepartemen` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT untuk tabel `departemen`
@@ -527,7 +484,7 @@ ALTER TABLE `departemen`
 -- AUTO_INCREMENT untuk tabel `jabatan`
 --
 ALTER TABLE `jabatan`
-  MODIFY `IdJabatan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `IdJabatan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT untuk tabel `jenisbarang`
@@ -610,6 +567,13 @@ ALTER TABLE `rakdetail`
 --
 ALTER TABLE `tbuser`
   ADD CONSTRAINT `FK_tbuser_karyawan` FOREIGN KEY (`KodeKaryawan`) REFERENCES `karyawan` (`KodeKaryawan`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `usermenugroup`
+--
+ALTER TABLE `usermenugroup`
+  ADD CONSTRAINT `FK_usermenugroup_tbuser` FOREIGN KEY (`KodeKaryawan`) REFERENCES `tbuser` (`KodeKaryawan`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_usermenugroup_usermenugroup` FOREIGN KEY (`KodeGroupUserMenu`) REFERENCES `usermenugroup` (`KodeUserMenuGroup`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
